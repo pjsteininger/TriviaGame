@@ -33,9 +33,9 @@ $(document).ready(function () {
             }
         });
         function countdown() {
+            $("#question-timer").text((Math.floor(clockTime/10)) ? "00:" + clockTime : "00:0" + clockTime);
             clockTime--;
-            $("#question-timer").text("00:0" + clockTime);
-            if (clockTime <= 0) {
+            if (clockTime < 0) {
                 userAnswers[currentQuestion] = $("input:checked").val();
                 currentQuestion++;
                 if (currentQuestion < apiQuestionsArray.length) {
@@ -62,13 +62,16 @@ $(document).ready(function () {
             correctPlusIncorrect.push(apiQuestionsArray[currentQuestion].correct_answer);
             shuffleArray(correctPlusIncorrect);
             correctPlusIncorrect.forEach(function (e) {
+                let btnLabel = $("<label>");
                 let btn = $("<input>");
                 btn.attr("type", "radio");
                 btn.attr("value", e.trim());
                 btn.attr("name", "question-" + currentQuestion);
                 btn.addClass("m-2");
-                ansButtons.append(btn);
-                ansButtons.append(e.trim() + "<br>");
+                btnLabel.append(btn);
+                btnLabel.append(e.trim());
+                ansButtons.append(btnLabel);
+                ansButtons.append("<br>")
             });
             $("#answer-options").html(ansButtons);
         }
