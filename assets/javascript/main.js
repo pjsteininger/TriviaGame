@@ -13,7 +13,7 @@ $(document).ready(function () {
         url: queryURL,
         method: "GET",
     }).then(function (response) {
-        let clockTime = 10;
+        let clockTime = 30;
         let currentQuestion = 0;
         let userAnswers = [];
         let correctAnswers = [];
@@ -22,7 +22,7 @@ $(document).ready(function () {
         nextQuestion();
         $("#answer-button").click(function () {
             userAnswers[currentQuestion] = $("input:checked").val();
-            clockTime = 10;
+            clockTime = 30;
             currentQuestion++;
             if (currentQuestion < apiQuestionsArray.length) {
                 nextQuestion();
@@ -40,7 +40,7 @@ $(document).ready(function () {
                 currentQuestion++;
                 if (currentQuestion < apiQuestionsArray.length) {
                     clearInterval(intervalId);
-                    clockTime = 10;
+                    clockTime = 30;
                     nextQuestion();
                     intervalId = setInterval(countdown, 1000);
                 } else {
