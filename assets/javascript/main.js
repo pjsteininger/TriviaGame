@@ -67,9 +67,11 @@ $(document).ready(function () {
             this.makeQuestion();
         },
         countdown: function () {
-            if (tQuiz.timer >= 0) {
-                $("#timer-display").text(tQuiz.timer);
+            if (tQuiz.timer >= 10) {
+                $("#timer-display").text("00:"+tQuiz.timer);
                 tQuiz.timer--;
+            } else if (tQuiz.timer >= 0) {
+                $("#timer-display").text("00:0"+tQuiz.timer);
             } else {
                 clearInterval(tQuiz.timerInt);
                 tQuiz.takeAnswer();
