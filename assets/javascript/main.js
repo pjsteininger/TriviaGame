@@ -17,24 +17,51 @@ $(document).ready(function () {
         let currentQuestion = 0;
         let userAnswers = [];
         let correctAnswers = [];
+        let answerSubmitted = false;
+
         console.log(response);
         apiQuestionsArray = response.results;
         nextQuestion();
-        $("#answer-button").click(function () {
+        $("#answer-button").click(function checkAnswer() {
+            $("#answer-button").off("click");
+            answerSubmitted = true;
             userAnswers[currentQuestion] = $("input:checked").val();
-            clockTime = 30;
-            currentQuestion++;
-            if (currentQuestion < apiQuestionsArray.length) {
-                nextQuestion();
+            if (userAnswers[currentQuestion] === correctAnswers[currentQuestion]) {
+                $("*[data-correct-answer").css("color","green");
+                let rightWrongMessage = $("<div>");
+                rightWrongMessage.addClass("card-text text-center text-success");
+                rightWrongMessage.attr("data-rwm","rwm");
+                rightWrongMessage.text("Correct!");
+                $(".card-body").append(rightWrongMessage);
             } else {
-                clearInterval(intervalId);
-                $(this).off("click");
-                tallyAnswers();
+                $("*[data-correct-answer]").css("color","green");
+                $("input:checked").parent().css("color","red");
+                let rightWrongMessage = $("<div>");
+                rightWrongMessage.addClass("card-text text-center text-danger");
+                rightWrongMessage.attr("data-rwm","rwm");
+                rightWrongMessage.text("Incorrect!");
+                $(".card-body").append(rightWrongMessage);
             }
+            setTimeout(function () {
+                $("*[data-rwm]").remove();
+                answerSubmitted = false;
+                clockTime = 30;
+                currentQuestion++;
+                if (currentQuestion < apiQuestionsArray.length) {
+                    $("#answer-button").on("click", checkAnswer);
+                    nextQuestion();
+                } else {
+                    clearInterval(intervalId);
+                    $(this).off("click");
+                    tallyAnswers();
+                }
+            }, 2000)
         });
         function countdown() {
-            $("#question-timer").text((Math.floor(clockTime/10)) ? "00:" + clockTime : "00:0" + clockTime);
-            clockTime--;
+            if (!answerSubmitted) {
+                $("#question-timer").text((Math.floor(clockTime / 10)) ? "00:" + clockTime : "00:0" + clockTime);
+                clockTime--;
+            }
             if (clockTime < 0) {
                 userAnswers[currentQuestion] = $("input:checked").val();
                 currentQuestion++;
@@ -70,6 +97,9 @@ $(document).ready(function () {
                 btn.addClass("m-2");
                 btnLabel.append(btn);
                 btnLabel.append(e.trim());
+                if (e === apiQuestionsArray[currentQuestion].correct_answer) {
+                    btnLabel.attr("data-correct-answer", "true");
+                }
                 ansButtons.append(btnLabel);
                 ansButtons.append("<br>")
             });
@@ -92,6 +122,7 @@ $(document).ready(function () {
                     numUnanswered++;
                 }
             });
+
             $("#answer-button").css("display", "none");
             $(".card-text").empty();
             $("#question-number").text("Results:")
