@@ -67,7 +67,6 @@ $(document).ready(function () {
             this.makeQuestion();
         },
         countdown: function () {
-            console.log(tQuiz.timer);
             if (tQuiz.timer >= 10) {
                 $("#timer-display").text("00:"+tQuiz.timer);
                 tQuiz.timer--;
