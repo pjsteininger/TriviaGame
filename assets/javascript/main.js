@@ -99,7 +99,7 @@ $(document).ready(function () {
             }
         },
         compareAnswer: function (ans, currQ) {
-            if (ans === this.correctAnswers[currQ]) {
+            if (ans === this.correctAnswers[currQ].trim()) {
                 this.aCorrect++;
                 $("*[data-correct-answer").css("color", "green");
                 $("#result-msg").append(tQuiz.correctMsg);
